@@ -20,16 +20,16 @@ bool checkRow(const int xPos, const int yPos, int puzzle[rows][cols]){
     // and if its equal we return false? and if it checks the whole row then we know the number passes this check.
     // we need to check each spot but itself. for example if we are in (0,0) we need it to check (0,1-9) but not (0,0)
     for(int i = 0; i<9; i++){
-        if(puzzle[xPos][i] == puzzle[xPos][yPos] && i != yPos){
+        if(i != yPos && puzzle[xPos][i] == puzzle[xPos][yPos]){
             return false;
-        };
+        }
     }
     return true;
 };
 
 bool checkCol(const int xPos, const int yPos, int puzzle[rows][cols]){
     for(int i = 0; i<9; i++){
-        if(puzzle[i][yPos] == puzzle[xPos][yPos] && i != xPos){
+        if(i != xPos && puzzle[i][yPos] == puzzle[xPos][yPos]){
             return false;
         }
     }
@@ -44,18 +44,22 @@ bool checkSector(int xPos, int yPos, int puzzle[rows][cols]){
 
     for(int i = 0; i<3; i++){
         for(int n = 0; n<3; n++){
-            if(puzzle[xPos][yPos] == puzzle[newX + i][newY + n] && (newX + i != xPos)){
+            if((newX + i != xPos || newY + n != yPos) && puzzle[xPos][yPos] == puzzle[newX + i][newY + n]){
                 return false;
             }
         }
     }
-    return false;
+    return true;
 }
 
 bool solve(int puzzle[rows][cols]){
     //the way i have it built we need to write the possiblity into the spot before we run the 3 checks.
     // so we put in 1 to start run all 3 checks if any come back false we move up to 2 until all three are true
     // if we get all the way to 9 and none are true we need to recursivly go back up the pile to the previous one and try again.
+    
+    
+    
+    // so we are  not ever hitting the next iteration of the first for loop...
     for(int i=0; i<9; i++){
         for(int n=0; n<9; n++){
             if(puzzle[i][n] == 0){
@@ -65,7 +69,7 @@ bool solve(int puzzle[rows][cols]){
                     
                     if(checkRow(i, n, puzzle) && checkCol(i, n, puzzle) && checkSector(i, n, puzzle)){
                         if(solve(puzzle)){
-                            printPuzzle(puzzle);
+                            //printPuzzle(puzzle);
                             return true;
                         }
                     }
@@ -94,22 +98,12 @@ bool solve(int puzzle[rows][cols]){
 
 
 int main(){
-    std::cout<< "hello world" << std::endl;
- 
-
-
 
     solve(intakeArray);
 
-    //printPuzzle(intakeArray);
+    printPuzzle(intakeArray);
 
-
+    
+    std::cout<< "hello world" << std::endl;
     return 0;
 }
-
-// what do I need it to do?
-// take a array of arrays...
-// go row boy row
-// cloumn by column
-// and 3x3 sector at a time
-// it has to be recursive?
